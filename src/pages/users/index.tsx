@@ -15,6 +15,7 @@ import {
   Spinner
 } from "@chakra-ui/react";
 import Link from "next/link";
+import { useState } from "react";
 import { RiAddLine, RiPencilLine } from "react-icons/ri";
 import { Header } from "../../components/Header";
 import { Pagination } from "../../components/Pagination";
@@ -22,7 +23,9 @@ import { Sidebar } from "../../components/Sidebar";
 import { useGetUsers } from "../../services/hooks/users/useGetUsers";
 
 export default function UserList() {
-  const { data, isLoading, isFetching, error } = useGetUsers();
+  const [page, setPage] = useState(1);
+
+  const { data, isLoading, isFetching, error } = useGetUsers(page);
 
   return (
     <Box>
@@ -72,7 +75,7 @@ export default function UserList() {
                     </Tr>
                   </Thead>
                   <Tbody>
-                    {data.map(user => {
+                    {data.users.map(user => {
                       return (
                         <Tr key={user.id}>
                           <Td px={["4", "4", "6"]}>
@@ -107,7 +110,11 @@ export default function UserList() {
                 </Table>
               </Box>
 
-              <Pagination />
+              <Pagination 
+                totalCountOfRegisters={data.totalCount}
+                currentPage={page}
+                onPageChange={setPage}
+              />
             </>
           )}
         </Box>
